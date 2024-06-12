@@ -1,22 +1,45 @@
-import React from 'react';
+import React, {useEffect, useMemo, useState} from 'react';
 import './App.css';
-import TodoList from "./Todolist";
+import TodoList, {ITask} from "./Todolist";
 
+export type FilterValuesType = "all" | "completed" | "active"
 function App() {
-    const tasks1 = [
+
+
+    const [tasks,setTasks] = useState<ITask[]>([
         {id: 1, title: 'Bihavior', isDone: true},
         {id: 2, title: 'JavaScript', isDone: true},
         {id: 3, title: 'React', isDone: false}
-    ]
-    const tasks2 = [
-        {id: 1, title: 'XXX', isDone: true},
-        {id: 2, title: 'Netflix', isDone: false},
-        {id: 3, title: 'Helloween', isDone: false}
-    ]
+    ])
+
+    const [filter,setFilter] = useState<FilterValuesType>('all');
+
+    function removeTasks(id: number) {
+        let filteredTasks = tasks.filter(task => task.id !== id);
+        setTasks(filteredTasks)
+    }
+
+    let taskForTodoList = useMemo(() => {
+        switch (filter) {
+             case 'completed':
+                 return tasks.filter(task => task.isDone);
+                 case 'active':
+                     return tasks.filter(task => !task.isDone);
+            default:
+                         return tasks
+        }
+    },[tasks, filter]);
+
+    function changeFilter(value: FilterValuesType) {
+        setFilter(value)
+    }
+
   return (
     <div className="App">
-      <TodoList tasks={tasks1} title='What have to learn?'/>
-        <TodoList tasks={tasks2} title='What have to drink?'/>
+      <TodoList tasks={taskForTodoList}
+                title='What have to learn?'
+                changeFilter={changeFilter}
+                removeTasks={removeTasks}/>
     </div>
   );
 }
