@@ -8,13 +8,3 @@ ul,li {
 a {
   text-decoration: none;
 }
-
-
-.App {
-  display: flex;
-  padding: 39px;
-}
-
-.App > div {
-  margin-right: 50px;
-}
